@@ -1,0 +1,1917 @@
+        // Chat functions
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                const messagesContainer = document.getElementById('chatMessages');
+                
+                // User message
+                const userMsg = document.createElement('div');
+                userMsg.style.display = 'flex';
+                userMsg.style.justifyContent = 'flex-end';
+                userMsg.style.marginBottom = '15px';
+                userMsg.innerHTML = `
+                    <div style="background: var(--primary); color: white; padding: 15px; border-radius: 20px; max-width: 75%; border: 1px solid var(--border);">
+                        <p style="margin: 0; line-height: 1.5;">${message}</p>
+                        <small style="opacity: 0.8; font-size: 0.8rem;">${new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})}</small>
+                    </div>
+                `;
+                messagesContainer.appendChild(userMsg);
+                
+                // Show typing indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.id = 'typingIndicator';
+                typingIndicator.style.display = 'flex';
+                typingIndicator.style.marginBottom = '15px';
+                typingIndicator.innerHTML = `
+                    <div class="avatar" style="width: 40px; height: 40px; font-size: 1rem; margin-right: 12px;">FB</div>
+                    <div style="background: var(--surface); padding: 15px; border-radius: 20px; border: 1px solid var(--border);">
+                        <div style="display: flex; gap: 4px;">
+                            <div style="width: 8px; height: 8px; background: var(--text-secondary); border-radius: 50%; animation: typing 1.5s infinite;"></div>
+                            <div style="width: 8px; height: 8px; background: var(--text-secondary); border-radius: 50%; animation: typing 1.5s infinite 0.3s;"></div>
+                            <div style="width: 8px; height: 8px; background: var(--text-secondary); border-radius: 50%; animation: typing 1.5s infinite 0.6s;"></div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(typingIndicator);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Simulate expert response
+                setTimeout(() => {
+                    // Remove typing indicator
+                    const typing = document.getElementById('typingIndicator');
+                    if (typing) typing.remove();
+                    
+                    // Generate expert response based on message content
+                    let expertResponse = getExpertResponse(message);
+                    
+                    const expertMsg = document.createElement('div');
+                    expertMsg.style.display = 'flex';
+                    expertMsg.style.marginBottom = '15px';
+                    expertMsg.innerHTML = `
+                        <div class="avatar" style="width: 40px; height: 40px; font-size: 1rem; margin-right: 12px;">FB</div>
+                        <div style="background: var(--surface); padding: 15px; border-radius: 20px; max-width: 75%; border: 1px solid var(--border);">
+                            <p style="margin: 0; line-height: 1.5;">${expertResponse}</p>
+                            <small style="color: var(--text-secondary); font-size: 0.8rem;">${new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'})}</small>
+                        </div>
+                    `;
+                    messagesContainer.appendChild(expertMsg);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, Math.random() * 2000 + 1000); // Random response time between 1-3 seconds
+                
+                input.value = '';
+                input.style.height = '45px'; // Reset textarea height
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function getExpertResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // AI-like responses based on keywords
+            if (message.includes('uyku') || message.includes('uyuma') || message.includes('uykusuzluk')) {
+                const sleepResponses = [
+                    "Uyku problemleri çok yaygındır. Uyku kalitenizi artırmak için düzenli uyku saatleri önemlidir. Size özel bir uyku programı hazırlayabilirim.",
+                    "Uyku bozukluğunuz ne kadar süredir devam ediyor? Bu konuda detaylı bir değerlendirme yapmamız gerekiyor. İsterseniz görüntülü görüşme planlayalım.",
+                    "Uyku hijyeni çok önemlidir. Yatmadan önce gevşeme teknikleri ve binaural sesler kullanmayı denediniz mi? Size bu konuda rehberlik edebilirim."
+                ];
+                return sleepResponses[Math.floor(Math.random() * sleepResponses.length)];
+            }
+            
+            if (message.includes('stres') || message.includes('kaygı') || message.includes('anksiyete')) {
+                const stressResponses = [
+                    "Stres yönetimi konusunda size yardımcı olabilirim. Nefes teknikleri ve mindfulness egzersizleri çok etkili olabilir. Hangi durumlar sizi daha çok strese sokuyor?",
+                    "Kaygı durumları günlük yaşamınızı ne kadar etkiliyor? Progressive muscle relaxation tekniği sizin için çok faydalı olabilir.",
+                    "Stres seviyenizi düşürmek için kişiselleştirilmiş tekniker önerebilirim. Günlük rutininiz nasıl? Bu bilgiler çok değerli."
+                ];
+                return stressResponses[Math.floor(Math.random() * stressResponses.length)];
+            }
+            
+            if (message.includes('merhaba') || message.includes('selam') || message.includes('iyi')) {
+                return "Merhaba! Size yardımcı olmaktan mutluluk duyarım. Uyku veya stres yönetimi konularında hangi konularda destek almak istiyorsunuz?";
+            }
+            
+            if (message.includes('randevu') || message.includes('görüşme') || message.includes('appointment')) {
+                return "Tabii ki! Size uygun bir randevu saati ayarlayabiliriz. Yukarıdaki 'Randevu Al' butonunu kullanarak müsait saatlerimi görebilir ve randevu oluşturabilirsiniz.";
+            }
+            
+            if (message.includes('teşekkür') || message.includes('sağol') || message.includes('thanks')) {
+                return "Rica ederim! Size yardımcı olabildiğim için çok mutluyum. Başka sorularınız olursa her zaman buradayım. 😊";
+            }
+            
+            // Default responses
+            const defaultResponses = [
+                "Anlıyorum. Bu konuda size nasıl yardımcı olabileceğimi düşünmeme izin verin. Biraz daha detay verebilir misiniz?",
+                "Bu çok önemli bir konu. Size özel bir yaklaşım geliştirebilmem için durumunuz hakkında biraz daha bilgi alabilir miyim?",
+                "Teşekkür ederim bu bilgileri paylaştığınız için. Size en iyi şekilde yardımcı olabilmek için daha detaylı konuşmamız gerekebilir.",
+                "Size yardımcı olmak için buradayım. Bu durumu daha iyi anlayabilmem için görüntülü bir görüşme yapmak ister misiniz?"
+            ];
+            
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        }<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y-SSM - Uyku ve Stres Yönetim Sistemi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-dark: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            --secondary: #f093fb;
+            --accent: #4facfe;
+            --dark: #1a1a2e;
+            --dark-secondary: #16213e;
+            --text-light: #e8e8e8;
+            --text-dark: #333;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-dark: rgba(0, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f0f23;
+            --surface: #1a1a2e;
+            --text: #e8e8e8;
+            --text-secondary: #b3b3b3;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-secondary: #64748b;
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg, #0f0f23);
+            color: var(--text, #e8e8e8);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            background: var(--glass-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .hero-content {
+            z-index: 2;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            border: 1px solid var(--border);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .features {
+            padding: 100px 0;
+            background: var(--surface);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 80px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--glass);
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .dashboard {
+            display: none;
+            padding: 40px 0;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--glass);
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .dashboard-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 15px 0;
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: var(--accent);
+            background: var(--glass);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        .nav-item span {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .admin-panel {
+            display: none;
+            padding: 40px 0;
+        }
+
+        .admin-header {
+            background: var(--primary);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .admin-card {
+            background: var(--surface);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--surface);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            z-index: 1001;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background: var(--glass);
+            border-radius: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero p { font-size: 1.1rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .features-grid { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .modal-content { width: 95%; padding: 30px 20px; }
+            body { padding-bottom: 80px; }
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            animation: float-particle 20s linear infinite;
+        }
+
+        @keyframes float-particle {
+            from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background">
+            <canvas id="hero-canvas"></canvas>
+        </div>
+        <div class="floating-particles" id="particles"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Y-SSM</h1>
+                <p>Uyku ve Stres Yönetim Sistemi<br>Modern teknoloji ile sağlıklı yaşam</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary" onclick="showModal('loginModal')">
+                        <i class="fas fa-right-to-bracket"></i> Giriş Yap
+                    </a>
+                    <a href="#" class="btn btn-secondary" onclick="showModal('registerModal')">
+                        <i class="fas fa-user-plus"></i> Kayıt Ol
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Özellikler</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Gevşeme Teknikleri</h3>
+                    <p>Kutu nefes, rehberli imgeleme ve progresif kas gevşeme teknikleri ile stres yönetimi</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headphones-simple"></i>
+                    </div>
+                    <h3>Binaural Vuruşlar</h3>
+                    <p>Delta, teta ve alfa frekanslarında özel sesler ile kaliteli uyku desteği</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>Uyku Analizi</h3>
+                    <p>Xiaomi Smart Band 8 Active ile entegre uyku ve kalp atışı takibi</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fab fa-app-store-ios"></i>
+                    </div>
+                    <h3>Mobil Uyumluluk</h3>
+                    <p>Android ve iOS platformlarında sorunsuz çalışan mobil uygulama</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3>Uzman Desteği</h3>
+                    <p>Profesyonel destek için uzmanlarla görüntülü görüşme imkanı</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell-concierge"></i>
+                    </div>
+                    <h3>Akıllı Hatırlatıcılar</h3>
+                    <p>Kişiselleştirilmiş bildirimler ve günlük rutinler</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="container">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" data-target="1000">0</div>
+                <p>Aktif Kullanıcı</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="95">0</div>
+                <p>Memnuniyet Oranı %</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="24">0</div>
+                <p>7/24 Destek</p>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" data-target="50">0</div>
+                <p>Uzman Hekim</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="dashboard container" id="dashboard">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="avatar" id="userAvatar">KA</div>
+                <div>
+                    <h3 id="userName">Kullanıcı Adı</h3>
+                    <p id="userEmail">user@email.com</p>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()">
+                <i class="fas fa-arrow-right-from-bracket"></i> Çıkış
+            </button>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">Bugünkü Uyku</h3>
+                    <i class="fas fa-bed card-icon"></i>
+                </div>
+                <div class="chart-container">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+                <p>7.5 saat / 8 saat hedef</p>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">Stres Seviyesi</h3>
+                    <i class="fas fa-heart-pulse card-icon"></i>
+                </div>
+                <div class="chart-container">
+                    <canvas id="stressChart"></canvas>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 60%"></div>
+                </div>
+                <p>Orta seviye stres</p>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">Haftalık İstatistik</h3>
+                    <i class="fas fa-chart-column card-icon"></i>
+                </div>
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+                <p>Bu hafta %12 gelişme</p>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">Günlük Aktiviteler</h3>
+                    <i class="fas fa-list-check card-icon"></i>
+                </div>
+                <div style="margin: 20px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span><i class="fas fa-spa" style="margin-right: 8px; color: var(--accent);"></i>Gevşeme Tekniği</span>
+                        <span style="color: #4ade80;"><i class="fas fa-circle-check"></i></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span><i class="fas fa-headphones-simple" style="margin-right: 8px; color: var(--accent);"></i>Binaural Vuruş</span>
+                        <span style="color: #4ade80;"><i class="fas fa-circle-check"></i></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span><i class="fas fa-bed" style="margin-right: 8px; color: var(--accent);"></i>Uyku Kaydı</span>
+                        <span style="color: #f59e0b;"><i class="fas fa-clock"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel -->
+    <section class="admin-panel container" id="adminPanel">
+        <div class="admin-header">
+            <h2>Yönetici Paneli</h2>
+            <p>Sistem yönetimi ve kullanıcı kontrolü</p>
+        </div>
+        <div class="admin-grid">
+            <div class="admin-card">
+                <i class="fas fa-users-gear" style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;"></i>
+                <h3>Kullanıcı Yönetimi</h3>
+                <p>Kullanıcı kayıtları ve profil düzenleme</p>
+            </div>
+            <div class="admin-card">
+                <i class="fas fa-shield-virus" style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;"></i>
+                <h3>Güvenlik</h3>
+                <p>Saldırı kayıtları ve güvenlik analizi</p>
+            </div>
+            <div class="admin-card">
+                <i class="fas fa-chart-pie" style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;"></i>
+                <h3>İstatistikler</h3>
+                <p>Sistem kullanım raporları</p>
+            </div>
+            <div class="admin-card">
+                <i class="fas fa-gear" style="font-size: 2rem; color: var(--accent); margin-bottom: 15px;"></i>
+                <h3>Sistem Ayarları</h3>
+                <p>Genel sistem konfigürasyonu</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <div class="navigation" id="navigation" style="display: none;">
+        <div class="nav-items">
+            <div class="nav-item active" data-section="dashboard">
+                <i class="fas fa-house"></i>
+                <span>Ana Sayfa</span>
+            </div>
+            <div class="nav-item" data-section="relaxation">
+                <i class="fas fa-lotus-position"></i>
+                <span>Gevşeme</span>
+            </div>
+            <div class="nav-item" data-section="binaural">
+                <i class="fas fa-wave-square"></i>
+                <span>Binaural</span>
+            </div>
+            <div class="nav-item" data-section="records">
+                <i class="fas fa-chart-simple"></i>
+                <span>Kayıtlar</span>
+            </div>
+            <div class="nav-item" data-section="support">
+                <i class="fas fa-headset"></i>
+                <span>Destek</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('loginModal')">&times;</span>
+            <h2 style="margin-bottom: 30px; text-align: center; color: var(--text);">Giriş Yap</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginPhone">Telefon Numarası</label>
+                    <input type="tel" id="loginPhone" required placeholder="0555 123 4567">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Şifre</label>
+                    <input type="password" id="loginPassword" required placeholder="Şifrenizi girin">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-right-to-bracket"></i> Giriş Yap
+                    </button>
+                </div>
+                <div class="form-group" style="text-align: center;">
+                    <a href="#" onclick="showModal('adminLoginModal'); hideModal('loginModal');" style="color: var(--accent);">
+                        Yönetici Girişi
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('registerModal')">&times;</span>
+            <h2 style="margin-bottom: 30px; text-align: center; color: var(--text);">Kayıt Ol</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Ad Soyad</label>
+                    <input type="text" id="registerName" required placeholder="Adınız ve soyadınız">
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Telefon Numarası</label>
+                    <input type="tel" id="registerPhone" required placeholder="0555 123 4567">
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-posta</label>
+                    <input type="email" id="registerEmail" required placeholder="email@ornegi.com">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Şifre</label>
+                    <input type="password" id="registerPassword" required placeholder="Güçlü bir şifre seçin">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i> Kayıt Ol
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('adminLoginModal')">&times;</span>
+            <h2 style="margin-bottom: 30px; text-align: center; color: var(--text);">Yönetici Girişi</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminUsername">Kullanıcı Adı</label>
+                    <input type="text" id="adminUsername" required placeholder="Yönetici kullanıcı adı">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Şifre</label>
+                    <input type="password" id="adminPassword" required placeholder="Yönetici şifresi">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-shield-halved"></i> Yönetici Girişi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sleep Record Modal -->
+    <div class="modal" id="sleepRecordModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('sleepRecordModal')">&times;</span>
+            <h2 style="margin-bottom: 30px; text-align: center; color: var(--text);">Uyku Kaydı</h2>
+            <form id="sleepRecordForm">
+                <div class="form-group">
+                    <label for="sleepDate">Tarih</label>
+                    <input type="date" id="sleepDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="totalSleep">Toplam Uyku Süresi (saat)</label>
+                    <input type="number" id="totalSleep" step="0.1" min="0" max="24" required>
+                </div>
+                <div class="form-group">
+                    <label for="deepSleep">Derin Uyku (saat)</label>
+                    <input type="number" id="deepSleep" step="0.1" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="lightSleep">Hafif Uyku (saat)</label>
+                    <input type="number" id="lightSleep" step="0.1" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="remSleep">REM Uyku (saat)</label>
+                    <input type="number" id="remSleep" step="0.1" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="avgHeartRate">Ortalama Kalp Atışı</label>
+                    <input type="number" id="avgHeartRate" min="40" max="200" required>
+                </div>
+                <div class="form-group">
+                    <label for="stressLevel">Günlük Stres Seviyesi (1-10)</label>
+                    <select id="stressLevel" required>
+                        <option value="">Seçiniz</option>
+                        <option value="1">1 - Çok düşük</option>
+                        <option value="2">2 - Düşük</option>
+                        <option value="3">3 - Hafif düşük</option>
+                        <option value="4">4 - Normal altı</option>
+                        <option value="5">5 - Normal</option>
+                        <option value="6">6 - Normal üstü</option>
+                        <option value="7">7 - Yüksek</option>
+                        <option value="8">8 - Çok yüksek</option>
+                        <option value="9">9 - Aşırı yüksek</option>
+                        <option value="10">10 - Kritik</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="binauralBefore">Binaural Vuruş Öncesi Kalp Atışı</label>
+                    <input type="number" id="binauralBefore" min="40" max="200">
+                </div>
+                <div class="form-group">
+                    <label for="binauralAfter">Binaural Vuruş Sonrası Kalp Atışı</label>
+                    <input type="number" id="binauralAfter" min="40" max="200">
+                </div>
+                <div class="form-group">
+                    <label for="relaxationBefore">Gevşeme Öncesi Kalp Atışı</label>
+                    <input type="number" id="relaxationBefore" min="40" max="200">
+                </div>
+                <div class="form-group">
+                    <label for="relaxationAfter">Gevşeme Sonrası Kalp Atışı</label>
+                    <input type="number" id="relaxationAfter" min="40" max="200">
+                </div>
+                <div class="form-group">
+                    <label for="sleepNotes">Uyku ile İlgili Notlar</label>
+                    <textarea id="sleepNotes" rows="3" placeholder="Uyku kalitesi, rüyalar, uyanma durumu vb."></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i> Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expert Chat Modal -->
+    <div class="modal" id="expertChatModal">
+        <div class="modal-content" style="max-width: 900px; height: 85vh;">
+            <span class="close" onclick="hideModal('expertChatModal')">&times;</span>
+            
+            <!-- Expert Profile Header -->
+            <div style="display: flex; align-items: center; padding-bottom: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+                <div class="expert-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.8rem; font-weight: 600; margin-right: 20px;">FB</div>
+                <div style="flex: 1;">
+                    <h2 style="margin: 0; color: var(--text);">Dr. Fidan Balkaya</h2>
+                    <p style="color: var(--text-secondary); margin: 5px 0; font-size: 1.1rem;">Uyku ve Stres Uzmanı</p>
+                    <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                        <div style="display: flex; align-items: center;">
+                            <div id="expertStatus" style="width: 10px; height: 10px; background: #4ade80; border-radius: 50%; margin-right: 8px;"></div>
+                            <span id="expertStatusText" style="font-size: 0.9rem; color: #4ade80; font-weight: 500;">Çevrimiçi</span>
+                        </div>
+                        <div style="display: flex; align-items: center; color: var(--text-secondary); font-size: 0.9rem;">
+                            <i class="fas fa-star" style="color: #fbbf24; margin-right: 5px;"></i>
+                            <span>4.9/5 (127 değerlendirme)</span>
+                        </div>
+                        <div style="display: flex; align-items: center; color: var(--text-secondary); font-size: 0.9rem;">
+                            <i class="fas fa-clock" style="margin-right: 5px;"></i>
+                            <span>Ortalama yanıt: 2 dk</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button id="videoCallBtn" class="btn btn-primary" onclick="startVideoCall()" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-video"></i> Görüntülü Görüşme
+                    </button>
+                    <button class="btn btn-secondary" onclick="showModal('appointmentModal')" style="display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-calendar-plus"></i> Randevu Al
+                    </button>
+                </div>
+            </div>
+
+            <!-- Video Call Area -->
+            <div id="videoCallArea" style="display: none; margin-bottom: 20px;">
+                <div style="display: flex; gap: 15px; height: 300px;">
+                    <!-- Expert Video -->
+                    <div style="flex: 1; background: #000; border-radius: 15px; position: relative; overflow: hidden;">
+                        <video id="expertVideo" style="width: 100%; height: 100%; object-fit: cover;" autoplay muted>
+                            <!-- Simulated expert video - in real app this would be WebRTC stream -->
+                        </video>
+                        <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
+                            Dr. Fidan Balkaya
+                        </div>
+                        <div id="callTimer" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
+                            00:00
+                        </div>
+                    </div>
+                    <!-- User Video -->
+                    <div style="width: 200px; background: #000; border-radius: 15px; position: relative; overflow: hidden;">
+                        <video id="userVideo" style="width: 100%; height: 100%; object-fit: cover;" autoplay muted>
+                            <!-- User's camera feed -->
+                        </video>
+                        <div style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
+                            Siz
+                        </div>
+                    </div>
+                </div>
+                <!-- Video Controls -->
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 15px;">
+                    <button id="muteBtn" class="btn btn-secondary" onclick="toggleMute()" style="border-radius: 50%; width: 50px; height: 50px; padding: 0;">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button id="cameraBtn" class="btn btn-secondary" onclick="toggleCamera()" style="border-radius: 50%; width: 50px; height: 50px; padding: 0;">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="btn" onclick="endVideoCall()" style="background: #ef4444; color: white; border-radius: 50%; width: 50px; height: 50px; padding: 0;">
+                        <i class="fas fa-phone-slash"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareScreen()" style="border-radius: 50%; width: 50px; height: 50px; padding: 0;">
+                        <i class="fas fa-desktop"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="chatMessages" style="height: 350px; overflow-y: auto; padding: 15px; background: var(--glass); border-radius: 15px; margin-bottom: 20px; border: 1px solid var(--border);">
+                <div style="display: flex; margin-bottom: 15px;">
+                    <div class="avatar" style="width: 40px; height: 40px; font-size: 1rem; margin-right: 12px;">FB</div>
+                    <div style="background: var(--surface); padding: 15px; border-radius: 20px; max-width: 75%; border: 1px solid var(--border);">
+                        <p style="margin: 0; line-height: 1.5;">Merhaba! Ben Dr. Fidan Balkaya. Uyku ve stres yönetimi konularında size nasıl yardımcı olabilirim? İsterseniz hemen görüntülü görüşme başlatabiliriz. 😊</p>
+                        <small style="color: var(--text-secondary); font-size: 0.8rem;">14:30</small>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 20px 0; color: var(--text-secondary); font-size: 0.9rem;">
+                    <i class="fas fa-lock" style="margin-right: 5px;"></i>
+                    Tüm görüşmeler gizli ve güvenli bir şekilde yapılmaktadır.
+                </div>
+            </div>
+
+            <!-- Message Input -->
+            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <textarea id="chatInput" placeholder="Mesajınızı yazın..." style="width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 20px; background: var(--glass); color: var(--text); resize: none; min-height: 45px; max-height: 100px;" rows="1"></textarea>
+                </div>
+                <button onclick="sendMessage()" class="btn btn-primary" style="border-radius: 50%; width: 50px; height: 50px; padding: 0; flex-shrink: 0;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal" id="appointmentModal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('appointmentModal')">&times;</span>
+            <h2 style="margin-bottom: 30px; text-align: center; color: var(--text);">
+                <i class="fas fa-calendar-plus" style="margin-right: 10px; color: var(--accent);"></i>
+                Randevu Oluştur
+            </h2>
+            <div style="display: flex; align-items: center; margin-bottom: 25px; padding: 15px; background: var(--glass); border-radius: 10px; border: 1px solid var(--border);">
+                <div class="avatar" style="margin-right: 15px;">FB</div>
+                <div>
+                    <h4 style="margin: 0;">Dr. Fidan Balkaya</h4>
+                    <p style="margin: 5px 0 0 0; color: var(--text-secondary); font-size: 0.9rem;">Uyku ve Stres Uzmanı</p>
+                </div>
+            </div>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="appointmentDate">Randevu Tarihi</label>
+                    <input type="date" id="appointmentDate" required min="">
+                </div>
+                <div class="form-group">
+                    <label for="appointmentTime">Randevu Saati</label>
+                    <select id="appointmentTime" required>
+                        <option value="">Saat seçiniz</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentType">Görüşme Türü</label>
+                    <select id="appointmentType" required>
+                        <option value="">Seçiniz</option>
+                        <option value="consultation">Konsültasyon (30 dk) - ÜCRETSİZ</option>
+                        <option value="therapy">Terapi Seansı (60 dk) - 200₺</option>
+                        <option value="followup">Takip Görüşmesi (15 dk) - ÜCRETSİZ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentTopic">Görüşme Konusu</label>
+                    <select id="appointmentTopic" required>
+                        <option value="">Seçiniz</option>
+                        <option value="sleep">Uyku Bozuklukları</option>
+                        <option value="stress">Stres Yönetimi</option>
+                        <option value="anxiety">Anksiyete</option>
+                        <option value="relaxation">Gevşeme Teknikleri</option>
+                        <option value="other">Diğer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentNotes">Ek Notlar (Opsiyonel)</label>
+                    <textarea id="appointmentNotes" rows="3" placeholder="Görüşmek istediğiniz konular hakkında kısa bilgi verebilirsiniz..."></textarea>
+                </div>
+                <div class="form-group">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <input type="checkbox" id="termsAccept" required>
+                        <label for="termsAccept" style="margin: 0; font-size: 0.9rem;">
+                            <a href="#" style="color: var(--accent);">Gizlilik sözleşmesini</a> okudum ve kabul ediyorum
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-calendar-check"></i> Randevu Oluştur
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle" style="color: #4ade80;"></i>
+            <span id="notificationText">İşlem başarılı!</span>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let isAdmin = false;
+        let scene, camera, renderer;
+        let particles = [];
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+            }
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+            
+            notificationText.textContent = message;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-circle-check';
+                icon.style.color = '#4ade80';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-circle-exclamation';
+                icon.style.color = '#ef4444';
+            }
+            
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Three.js background animation
+        function initHeroBackground() {
+            const canvas = document.getElementById('hero-canvas');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            // Create floating particles
+            const geometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x667eea, 
+                transparent: true, 
+                opacity: 0.6 
+            });
+
+            for (let i = 0; i < 100; i++) {
+                const particle = new THREE.Mesh(geometry, material);
+                particle.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20
+                );
+                particle.velocity = new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.02,
+                    (Math.random() - 0.5) * 0.02,
+                    (Math.random() - 0.5) * 0.02
+                );
+                particles.push(particle);
+                scene.add(particle);
+            }
+
+            camera.position.z = 5;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                particles.forEach(particle => {
+                    particle.position.add(particle.velocity);
+                    particle.rotation.x += 0.01;
+                    particle.rotation.y += 0.01;
+                    
+                    // Wrap around screen
+                    if (particle.position.x > 10) particle.position.x = -10;
+                    if (particle.position.x < -10) particle.position.x = 10;
+                    if (particle.position.y > 10) particle.position.y = -10;
+                    if (particle.position.y < -10) particle.position.y = 10;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // Floating particles in hero
+        function createFloatingParticles() {
+            const particlesContainer = document.getElementById('particles');
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = particle.style.height = (Math.random() * 10 + 5) + 'px';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        const increment = target / 100;
+                        let current = 0;
+                        
+                        const updateCounter = () => {
+                            if (current < target) {
+                                current += increment;
+                                counter.textContent = Math.ceil(current);
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.textContent = target;
+                            }
+                        };
+                        updateCounter();
+                        observer.unobserve(counter);
+                    }
+                });
+            });
+            
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phone = document.getElementById('loginPhone').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simulate API call
+            setTimeout(() => {
+                currentUser = {
+                    name: 'Kullanıcı Adı',
+                    email: 'user@email.com',
+                    phone: phone
+                };
+                
+                showDashboard();
+                hideModal('loginModal');
+                showNotification('Başarıyla giriş yaptınız!');
+            }, 1000);
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            // Simulate API call
+            setTimeout(() => {
+                hideModal('registerModal');
+                showNotification('Kayıt işlemi başarılı! Giriş yapabilirsiniz.');
+            }, 1000);
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (username === 'Altingozluadam' && password === '****Has58****') {
+                isAdmin = true;
+                showAdminPanel();
+                hideModal('adminLoginModal');
+                showNotification('Yönetici paneline hoş geldiniz!');
+            } else {
+                showNotification('Geçersiz kullanıcı adı veya şifre!', 'error');
+                handleFailedLogin();
+            }
+        });
+
+        document.getElementById('sleepRecordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate saving data
+            setTimeout(() => {
+                hideModal('sleepRecordModal');
+                showNotification('Uyku kaydınız başarıyla kaydedildi!');
+                updateDashboard();
+            }, 500);
+        });
+
+        // Dashboard functions
+        function showDashboard() {
+            document.getElementById('hero').style.display = 'none';
+            document.querySelector('.features').style.display = 'none';
+            document.querySelector('.stats').parentElement.style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('navigation').style.display = 'block';
+            
+            // Update user info
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+            }
+            
+            // Initialize charts
+            initCharts();
+        }
+
+        function showAdminPanel() {
+            document.getElementById('hero').style.display = 'none';
+            document.querySelector('.features').style.display = 'none';
+            document.querySelector('.stats').parentElement.style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('navigation').style.display = 'none';
+        }
+
+        function logout() {
+            currentUser = null;
+            isAdmin = false;
+            document.getElementById('hero').style.display = 'block';
+            document.querySelector('.features').style.display = 'block';
+            document.querySelector('.stats').parentElement.style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            showNotification('Başarıyla çıkış yaptınız!');
+        }
+
+        // Chart initialization
+        function initCharts() {
+            // Sleep Chart
+            const sleepCanvas = document.getElementById('sleepChart');
+            const sleepCtx = sleepCanvas.getContext('2d');
+            sleepCanvas.width = sleepCanvas.offsetWidth;
+            sleepCanvas.height = sleepCanvas.offsetHeight;
+            
+            drawDonutChart(sleepCtx, [
+                { label: 'Derin Uyku', value: 2.5, color: '#667eea' },
+                { label: 'Hafif Uyku', value: 4.0, color: '#764ba2' },
+                { label: 'REM Uyku', value: 1.0, color: '#f093fb' }
+            ]);
+            
+            // Stress Chart
+            const stressCanvas = document.getElementById('stressChart');
+            const stressCtx = stressCanvas.getContext('2d');
+            stressCanvas.width = stressCanvas.offsetWidth;
+            stressCanvas.height = stressCanvas.offsetHeight;
+            
+            drawLineChart(stressCtx, [3, 4, 2, 5, 3, 4, 3]);
+            
+            // Weekly Chart
+            const weeklyCanvas = document.getElementById('weeklyChart');
+            const weeklyCtx = weeklyCanvas.getContext('2d');
+            weeklyCanvas.width = weeklyCanvas.offsetWidth;
+            weeklyCanvas.height = weeklyCanvas.offsetHeight;
+            
+            drawBarChart(weeklyCtx, [7.2, 6.8, 7.5, 8.0, 7.8, 8.2, 7.9]);
+        }
+
+        function drawDonutChart(ctx, data) {
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 20;
+            let currentAngle = -Math.PI / 2;
+            const total = data.reduce((sum, item) => sum + item.value, 0);
+            
+            data.forEach(item => {
+                const sliceAngle = (item.value / total) * 2 * Math.PI;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.arc(centerX, centerY, radius * 0.6, currentAngle + sliceAngle, currentAngle, true);
+                ctx.fillStyle = item.color;
+                ctx.fill();
+                currentAngle += sliceAngle;
+            });
+        }
+
+        function drawLineChart(ctx, data) {
+            const width = ctx.canvas.width - 40;
+            const height = ctx.canvas.height - 40;
+            const stepX = width / (data.length - 1);
+            const maxY = Math.max(...data);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 3;
+            
+            data.forEach((value, index) => {
+                const x = 20 + index * stepX;
+                const y = 20 + height - (value / maxY) * height;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // Add dots
+            data.forEach((value, index) => {
+                const x = 20 + index * stepX;
+                const y = 20 + height - (value / maxY) * height;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fillStyle = '#667eea';
+                ctx.fill();
+            });
+        }
+
+        function drawBarChart(ctx, data) {
+            const width = ctx.canvas.width - 40;
+            const height = ctx.canvas.height - 40;
+            const barWidth = width / data.length * 0.6;
+            const maxY = Math.max(...data);
+            
+            data.forEach((value, index) => {
+                const x = 20 + index * (width / data.length) + (width / data.length - barWidth) / 2;
+                const barHeight = (value / maxY) * height;
+                const y = 20 + height - barHeight;
+                
+                ctx.fillStyle = '#667eea';
+                ctx.fillRect(x, y, barWidth, barHeight);
+            });
+        }
+
+        // Video call functionality
+        let isVideoCallActive = false;
+        let isMuted = false;
+        let isCameraOn = true;
+        let callStartTime = null;
+        let callTimer = null;
+
+        function startVideoCall() {
+            if (!isVideoCallActive) {
+                isVideoCallActive = true;
+                callStartTime = new Date();
+                
+                // Show video call area
+                document.getElementById('videoCallArea').style.display = 'block';
+                document.getElementById('videoCallBtn').innerHTML = '<i class="fas fa-phone-slash"></i> Aramayı Bitir';
+                document.getElementById('videoCallBtn').onclick = endVideoCall;
+                
+                // Start call timer
+                startCallTimer();
+                
+                // Simulate getting user media
+                simulateUserMedia();
+                
+                // Update expert status
+                updateExpertStatus('busy', 'Görüşmede');
+                
+                showNotification('Görüntülü görüşme başlatıldı!');
+                
+                // Add call start message to chat
+                addSystemMessage('Görüntülü görüşme başladı');
+            }
+        }
+
+        function endVideoCall() {
+            if (isVideoCallActive) {
+                isVideoCallActive = false;
+                
+                // Hide video call area
+                document.getElementById('videoCallArea').style.display = 'none';
+                document.getElementById('videoCallBtn').innerHTML = '<i class="fas fa-video"></i> Görüntülü Görüşme';
+                document.getElementById('videoCallBtn').onclick = startVideoCall;
+                
+                // Stop call timer
+                if (callTimer) {
+                    clearInterval(callTimer);
+                    callTimer = null;
+                }
+                
+                // Update expert status
+                updateExpertStatus('online', 'Çevrimiçi');
+                
+                showNotification('Görüntülü görüşme sonlandırıldı');
+                
+                // Add call end message to chat
+                const duration = callStartTime ? Math.floor((new Date() - callStartTime) / 1000) : 0;
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                addSystemMessage(`Görüntülü görüşme sona erdi (Süre: ${minutes}:${seconds.toString().padStart(2, '0')})`);
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const muteBtn = document.getElementById('muteBtn');
+            if (isMuted) {
+                muteBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                muteBtn.style.background = '#ef4444';
+                muteBtn.style.color = 'white';
+                showNotification('Mikrofon kapatıldı');
+            } else {
+                muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                muteBtn.style.background = '';
+                muteBtn.style.color = '';
+                showNotification('Mikrofon açıldı');
+            }
+        }
+
+        function toggleCamera() {
+            isCameraOn = !isCameraOn;
+            const cameraBtn = document.getElementById('cameraBtn');
+            const userVideo = document.getElementById('userVideo');
+            
+            if (!isCameraOn) {
+                cameraBtn.innerHTML = '<i class="fas fa-video-slash"></i>';
+                cameraBtn.style.background = '#ef4444';
+                cameraBtn.style.color = 'white';
+                userVideo.style.display = 'none';
+                showNotification('Kamera kapatıldı');
+            } else {
+                cameraBtn.innerHTML = '<i class="fas fa-video"></i>';
+                cameraBtn.style.background = '';
+                cameraBtn.style.color = '';
+                userVideo.style.display = 'block';
+                showNotification('Kamera açıldı');
+            }
+        }
+
+        function shareScreen() {
+            showNotification('Ekran paylaşımı başlatılıyor...');
+            // In a real app, this would use navigator.mediaDevices.getDisplayMedia()
+            setTimeout(() => {
+                showNotification('Ekran paylaşımı aktif!');
+            }, 2000);
+        }
+
+        function startCallTimer() {
+            callTimer = setInterval(() => {
+                if (callStartTime) {
+                    const elapsed = Math.floor((new Date() - callStartTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('callTimer').textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function updateExpertStatus(status, text) {
+            const statusElement = document.getElementById('expertStatus');
+            const statusText = document.getElementById('expertStatusText');
+            
+            switch(status) {
+                case 'online':
+                    statusElement.style.background = '#4ade80';
+                    statusText.style.color = '#4ade80';
+                    break;
+                case 'busy':
+                    statusElement.style.background = '#f59e0b';
+                    statusText.style.color = '#f59e0b';
+                    break;
+                case 'offline':
+                    statusElement.style.background = '#6b7280';
+                    statusText.style.color = '#6b7280';
+                    break;
+            }
+            statusText.textContent = text;
+        }
+
+        function simulateUserMedia() {
+            // In a real app, you would use:
+            // navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            
+            // For demo, we'll just show placeholder videos
+            const expertVideo = document.getElementById('expertVideo');
+            const userVideo = document.getElementById('userVideo');
+            
+            // Add placeholder content
+            if (!expertVideo.src) {
+                expertVideo.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                expertVideo.style.display = 'flex';
+                expertVideo.style.alignItems = 'center';
+                expertVideo.style.justifyContent = 'center';
+                expertVideo.innerHTML = '<div style="color: white; font-size: 1.5rem;"><i class="fas fa-user-md"></i></div>';
+            }
+            
+            if (!userVideo.src) {
+                userVideo.style.background = 'linear-gradient(45deg, #4facfe, #00f2fe)';
+                userVideo.style.display = 'flex';
+                userVideo.style.alignItems = 'center';
+                userVideo.style.justifyContent = 'center';
+                userVideo.innerHTML = '<div style="color: white; font-size: 1rem;"><i class="fas fa-user"></i></div>';
+            }
+        }
+
+        function addSystemMessage(message) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const systemMsg = document.createElement('div');
+            systemMsg.style.textAlign = 'center';
+            systemMsg.style.margin = '15px 0';
+            systemMsg.style.color = 'var(--text-secondary)';
+            systemMsg.style.fontSize = '0.9rem';
+            systemMsg.style.fontStyle = 'italic';
+            systemMsg.innerHTML = `
+                <div style="display: inline-block; background: var(--glass); padding: 8px 15px; border-radius: 15px; border: 1px solid var(--border);">
+                    <i class="fas fa-info-circle" style="margin-right: 5px;"></i>
+                    ${message}
+                </div>
+            `;
+            messagesContainer.appendChild(systemMsg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Appointment form handling
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                type: document.getElementById('appointmentType').value,
+                topic: document.getElementById('appointmentTopic').value,
+                notes: document.getElementById('appointmentNotes').value
+            };
+            
+            // Simulate appointment booking
+            setTimeout(() => {
+                hideModal('appointmentModal');
+                showNotification('Randevunuz başarıyla oluşturuldu! Dr. Fidan Balkaya ile ' + 
+                    new Date(formData.date).toLocaleDateString('tr-TR') + ' tarihinde ' + 
+                    formData.time + ' saatinde görüşeceksiniz.');
+                
+                // Add appointment to chat
+                addSystemMessage(`Randevu oluşturuldu: ${new Date(formData.date).toLocaleDateString('tr-TR')} - ${formData.time}`);
+                
+                // Reset form
+                document.getElementById('appointmentForm').reset();
+            }, 1000);
+        });
+
+        // Chat input enhancements
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+        });
+
+        // Navigation handling
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                const section = this.getAttribute('data-section');
+                
+                switch(section) {
+                    case 'relaxation':
+                        showNotification('Gevşeme teknikleri bölümü açılıyor...');
+                        break;
+                    case 'binaural':
+                        showNotification('Binaural vuruşlar bölümü açılıyor...');
+                        break;
+                    case 'records':
+                        showModal('sleepRecordModal');
+                        break;
+                    case 'support':
+                        showModal('expertChatModal');
+                        break;
+                }
+            });
+        });
+
+        // Chat input enter key handler
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Window resize handler
+        window.addEventListener('resize', function() {
+            if (renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+
+        // Click outside modal to close
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initHeroBackground();
+            createFloatingParticles();
+            animateCounters();
+            
+            // Set current date for sleep record
+            document.getElementById('sleepDate').value = new Date().toISOString().split('T')[0];
+            
+            // Set minimum date for appointments (today)
+            document.getElementById('appointmentDate').min = new Date().toISOString().split('T')[0];
+            
+            // Add CSS animation for typing indicator
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes typing {
+                    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+                    30% { transform: translateY(-10px); opacity: 1; }
+                }
+                
+                .expert-avatar {
+                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                    transition: all 0.3s ease;
+                }
+                
+                .expert-avatar:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+                }
+                
+                #chatInput:focus {
+                    outline: none;
+                    border-color: var(--accent);
+                    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+                }
+                
+                .video-controls button:hover {
+                    transform: scale(1.1);
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Simulate daily notifications
+            setTimeout(() => {
+                showNotification('Gevşeme tekniği zamanı! 🧘‍♀️');
+            }, 5000);
+            
+            setTimeout(() => {
+                showNotification('Binaural vuruş dinleme zamanı! 🎧');
+            }, 10000);
+            
+            setTimeout(() => {
+                showNotification('Dr. Fidan Balkaya çevrimiçi! Görüşme için hazır 👩‍⚕️');
+            }, 15000);
+        });
+
+        // Update dashboard with new data
+        function updateDashboard() {
+            // Simulate updating charts with new data
+            if (document.getElementById('dashboard').style.display === 'block') {
+                initCharts();
+            }
+        }
+
+        // Simulated security monitoring
+        function logSecurityEvent(event) {
+            console.log(`Security Event: ${event} at ${new Date().toISOString()}`);
+            // In real app, this would send to server
+        }
+
+        // Monitor failed login attempts
+        let failedAttempts = 0;
+        function handleFailedLogin() {
+            failedAttempts++;
+            if (failedAttempts >= 3) {
+                logSecurityEvent('Multiple failed login attempts detected');
+                showNotification('Güvenlik nedeniyle geçici olarak engellendiniz.', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
+        
